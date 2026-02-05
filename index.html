@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin: 0;
+  font-family: 'Georgia', serif;
+  overflow: hidden;
+  text-align: center;
+  color: white;
+  background: linear-gradient(-45deg,#2b003e,#5a0f6e,#ff4d6d,#ff85a1,#6a1b9a);
+  background-size: 600% 600%;
+  animation: gradientBG 30s ease infinite;
+}
+
+section {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+section.active { display: flex; }
+
+h1 {
+  font-size: 3rem;
+  text-shadow: 0 0 15px #ff6b81,0 0 30px #ff4d6d;
+  animation: glowText 2.5s ease-in-out infinite alternate;
+}
+h2 { font-size: 1.6rem; opacity: .95; }
+p { font-size: 1.35rem; }
+
+button {
+  margin-top: 35px;
+  padding: 14px 40px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg,#ff6b81,#ff4d6d);
+  color: white;
+  box-shadow: 0 8px 25px rgba(255,77,109,.6);
+  transition: .3s;
+}
+button:hover { transform: scale(1.15); }
+
+.buttons {
+  position: relative;
+  width: 320px;
+  height: 160px;
+}
+#yesBtn { left: 50%; transform: translateX(-50%); position: absolute; }
+#noBtn {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg,#a29bfe,#6c5ce7);
+}
+
+.falling {
+  position: absolute;
+  pointer-events: none;
+  z-index: 999;
+}
+.heart {
+  font-size: 24px;
+  text-shadow: 0 0 10px #ff6b81,0 0 20px #ff4d6d;
+}
+
+.loveMsg {
+  position: absolute;
+  font-weight: bold;
+  opacity: 0;
+  animation: floatUp 8s linear forwards;
+}
+
+#noMsg {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  opacity: 0;
+}
+
+#customAlert {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+#customAlertBox {
+  background: linear-gradient(135deg,#ff6b81,#ff85a1);
+  padding: 30px;
+  border-radius: 25px;
+}
+
+#endingScene {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(-45deg,#2b003e,#6a1b9a,#ff4d6d,#ff85a1);
+  background-size: 500% 500%;
+  animation: gradientBG 30s ease infinite;
+}
+
+@keyframes gradientBG {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes glowText {
+  from{ text-shadow:0 0 15px #ff6b81 }
+  to{ text-shadow:0 0 35px #ff4d6d }
+}
+@keyframes floatUp {
+  0%{opacity:0;transform:translateY(0)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(-400px)}
+}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-love-song-281.mp3">
+</audio>
+
+<section id="landing" class="active">
+  <h1>Hey Cutie💗</h1>
+  <p>I made something just for you🎁,Do you wanna see💕?</p>
+  <button onclick="goNext()">Yes</button>
+</section>
+
+<section id="question">
+  <h1>Will you stay with me</h1>
+  <h2>for this life and whatever comes after?</h2>
+  <div class="buttons">
+    <button id="yesBtn" onclick="yesAnswer()">Yes</button>
+    <button id="noBtn" onmouseover="moveNo()">No</button>
+  </div>
+  <div id="noMsg">You can’t escape me 😁👻</div>
+</section>
+
+<div id="customAlert">
+  <div id="customAlertBox">
+    <h2> Warning 💕</h2>
+    <p id="customAlertMsg"></p>
+    <button onclick="closeCustomAlertAndEnd()">Ok😁</button>
+  </div>
+</div>
+
+<div id="endingScene">
+  <p>“Our love is my favorite story, and you’re the bestest chapter in my life nanuu💕📖”</p>
+  <h1> I H U ❤️</h1>
+</div>
+
+<script>
+const landing = document.getElementById("landing");
+const question = document.getElementById("question");
+const customAlert = document.getElementById("customAlert");
+const customAlertMsg = document.getElementById("customAlertMsg");
+const endingScene = document.getElementById("endingScene");
+const bgMusic = document.getElementById("bgMusic");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const noMsg = document.getElementById("noMsg");
+
+/* NAV */
+function goNext(){
+  landing.classList.remove("active");
+  question.classList.add("active");
+  bgMusic.play();
+  startFallingHearts();        // hearts on second page
+}
+
+/* YES */
+function yesAnswer(){
+  customAlertMsg.textContent="Loving me is addictive👻❤️";
+  customAlert.style.display="flex";
+}
+
+function closeCustomAlertAndEnd(){
+  customAlert.style.display="none";
+  question.classList.remove("active");
+  endingScene.style.display="flex";
+  startFallingHearts();        // hearts on last page
+  startFloatingLoveMessages();
+}
+
+/* NO */
+function moveNo(){
+  const parentRect = noBtn.parentElement.getBoundingClientRect();
+  const dx = (Math.random()*100 + 50)*2;
+  const dy = (Math.random()*50 + 25)*2;
+
+  let newLeft = noBtn.offsetLeft + dx;
+  let newTop = noBtn.offsetTop + dy;
+
+  // Keep inside parent
+  if(newLeft > parentRect.width - noBtn.offsetWidth) newLeft = 0;
+  if(newTop > parentRect.height - noBtn.offsetHeight) newTop = 0;
+
+  noBtn.style.left = newLeft + "px";
+  noBtn.style.top = newTop + "px";
+
+  // YES grows a bit
+  yesBtn.style.transform = "translateX(-50%) scale(1.3)";
+  setTimeout(()=>{ yesBtn.style.transform = "translateX(-50%) scale(1)"; }, 600);
+
+  // Show message
+  noMsg.style.opacity = 1;
+  setTimeout(()=>noMsg.style.opacity = 0, 1200);
+}
+
+/* ❤️ FALLING HEARTS */
+function startFallingHearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="falling heart";
+    h.textContent=["❤️","💖","💕","💗"][Math.floor(Math.random()*4)];
+    h.style.left=Math.random()*innerWidth+"px";
+    h.style.top="-30px";
+    h.style.fontSize=18+Math.random()*25+"px";
+    document.body.appendChild(h);
+    const d=5000+Math.random()*3000;
+    h.animate([{transform:"translateY(0)"},{transform:`translateY(${innerHeight}px)`}],{duration:d});
+    setTimeout(()=>h.remove(),d);
+  },200);
+}
+
+/* FLOATING TEXT */
+function startFloatingLoveMessages(){
+  const msgs=["💞 m&uForever","💖my bestfrnd","😘 Always you nana","💌 I love you cute felo"];
+  setInterval(()=>{
+    const m=document.createElement("div");
+    m.className="loveMsg";
+    m.textContent=msgs[Math.floor(Math.random()*msgs.length)];
+    m.style.left=Math.random()*innerWidth+"px";
+    m.style.top=innerHeight+"px";
+    document.body.appendChild(m);
+    setTimeout(()=>m.remove(),8000);
+  },1200);
+}
+</script>
+</body>
+</html>
